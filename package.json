@@ -9,7 +9,10 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "eslint": "eslint --ext .ts --ext .tsx src",
-    "eslint:fix": "eslint --fix --ext .ts --ext .tsx src"
+    "eslint:fix": "eslint --fix --ext .ts --ext .tsx src",
+    "test:nowatch": "react-scripts test --watchAll=false",
+    "prepare": "husky install",
+    "prepublish": "npm run eslint:fix"
   },
   "dependencies": {
     "react": "^18.2.0",
