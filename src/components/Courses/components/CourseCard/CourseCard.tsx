@@ -6,11 +6,10 @@ type CourseCard = {
   author: string;
   duration: string;
   date: string;
+  onClick: () => void;
 };
 
 const BUTTON_TEXT = 'SHOW COURSE';
-
-function goToCourseInfo() {}
 
 export default function CourseCard({
   title,
@@ -18,6 +17,7 @@ export default function CourseCard({
   author,
   duration,
   date,
+  onClick,
 }: CourseCard) {
   return (
     <section className='flex flex-col p-2 border-2 border-l-8 border-l-black rounded w-5/6 mb-4 m-2 bg-white'>
@@ -39,7 +39,7 @@ export default function CourseCard({
           </p>
           <br />
           <div className='w-60'>
-            <Button buttonText={BUTTON_TEXT} onClick={goToCourseInfo} />
+            <Button buttonText={BUTTON_TEXT} onClick={onClick} />
           </div>
         </div>
       </article>

@@ -1,6 +1,6 @@
 type Button = {
   buttonText: string;
-  onClick?: VoidFunction;
+  onClick?: () => void;
 };
 
 export default function Button({ buttonText, onClick }: Button) {
