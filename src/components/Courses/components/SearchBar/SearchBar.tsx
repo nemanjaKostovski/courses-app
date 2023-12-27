@@ -18,6 +18,7 @@ export default function SearchBar() {
         placeholder='input text'
         value={searchQuery}
         onChange={handleInputChange}
+        name='search'
       />
       <Button buttonText={BUTTON_TEXT} />
     </div>
