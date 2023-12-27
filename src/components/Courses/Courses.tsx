@@ -2,7 +2,6 @@ import CourseCard from './components/CourseCard/CourseCard';
 import { mockedCoursesList, mockedAuthorsList } from '../../constants';
 import EmptyCourseList from '../EmptyCourseList.tsx/EmptyCourseList';
 import getCourseDuration from '../../helpers/getCourseDuration';
-import SearchBar from './components/SearchBar/SearchBar';
 import CourseInfo from '../CourseInfo/CourseInfo';
 import { useState } from 'react';
 
@@ -33,7 +32,6 @@ export default function Courses() {
 
   return (
     <div className='flex flex-col ml-40'>
-      <SearchBar />
       {mockedCoursesList.map((course) => {
         const authors = course.authors.map((authorId) => {
           const author: Author | undefined = mockedAuthorsList.find(
