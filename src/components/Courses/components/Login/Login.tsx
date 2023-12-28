@@ -73,8 +73,8 @@ export default function Login() {
       );
 
       if (response.status === 201) {
-        navigate('/');
         localStorage.setItem('token', response.data.result);
+        navigate('/courses');
       } else {
         console.error('Login failed:', response.data);
       }
