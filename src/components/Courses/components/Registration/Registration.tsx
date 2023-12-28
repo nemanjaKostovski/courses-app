@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import Input from '../../../../common/Input.tsx/Input';
+import Input from '../../../../common/Input/Input';
 import Header from '../../../Header/Header';
 import Button from '../../../../common/Button/Button';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import ErrorMessage from '../../../../common/Error/ErrorMessage';
 
 type RegistrationFormData = {
   name: string;
@@ -26,6 +27,8 @@ export default function Registration() {
     email: '',
     password: '',
   });
+
+  const [hasError, setHasError] = useState(false);
 
   const navigate = useNavigate();
 
@@ -81,12 +84,14 @@ export default function Registration() {
       );
 
       if (response.status === 201) {
+        setHasError(false);
         navigate('/login');
       } else {
         console.error('Registration failed:', response.data);
       }
     } catch (error) {
       console.error('Error during registration:', error);
+      setHasError(true);
     }
   };
 
@@ -107,9 +112,7 @@ export default function Registration() {
             onChange={handleChange}
             autoFocus
           />
-          <p className='text-red-500 text-left w-full lg:ml-52'>
-            {validationErrors.name}
-          </p>
+          <ErrorMessage text={validationErrors.name} />
 
           <Input
             type='email'
@@ -118,9 +121,7 @@ export default function Registration() {
             value={registration.email}
             onChange={handleChange}
           />
-          <p className='text-red-500 text-left w-full lg:ml-52'>
-            {validationErrors.email}
-          </p>
+          <ErrorMessage text={validationErrors.email} />
 
           <Input
             type='password'
@@ -129,12 +130,11 @@ export default function Registration() {
             value={registration.password}
             onChange={handleChange}
           />
-          <p className='text-red-500 text-left w-full lg:ml-52'>
-            {validationErrors.password}
-          </p>
+          <ErrorMessage text={validationErrors.password} />
 
           <div className='mb-4'></div>
           <Button buttonText={BUTTON_TEXT} maxWidth='w-80' type={BUTTON_TYPE} />
+          {hasError && <ErrorMessage text='Sorry, registration failed!' />}
           <p className='mt-6'>
             If you have an account you may{' '}
             <Link className='font-bold' to={'/login'}>

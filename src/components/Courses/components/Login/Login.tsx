@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import Input from '../../../../common/Input.tsx/Input';
+import Input from '../../../../common/Input/Input';
 import Header from '../../../Header/Header';
 import Button from '../../../../common/Button/Button';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import ErrorMessage from '../../../../common/Error/ErrorMessage';
 
 type LoginFormData = {
   email: string;
@@ -23,6 +24,8 @@ export default function Login() {
     email: '',
     password: '',
   });
+
+  const [hasError, setHasError] = useState(false);
 
   const navigate = useNavigate();
 
@@ -73,6 +76,7 @@ export default function Login() {
       );
 
       if (response.status === 201) {
+        setHasError(false);
         localStorage.setItem('token', response.data.result);
         navigate('/courses');
       } else {
@@ -80,6 +84,7 @@ export default function Login() {
       }
     } catch (error) {
       console.error('Error during login:', error);
+      setHasError(true);
     }
   };
 
@@ -99,9 +104,7 @@ export default function Login() {
             value={login.email}
             onChange={handleChange}
           />
-          <p className='text-red-500 text-left w-full lg:ml-52'>
-            {validationErrors.email}
-          </p>
+          <ErrorMessage text={validationErrors.email} />
 
           <Input
             type='password'
@@ -110,12 +113,11 @@ export default function Login() {
             value={login.password}
             onChange={handleChange}
           />
-          <p className='text-red-500 text-left w-full lg:ml-52'>
-            {validationErrors.password}
-          </p>
+          <ErrorMessage text={validationErrors.password} />
 
           <div className='mb-4'></div>
           <Button buttonText={BUTTON_TEXT} maxWidth='w-80' type={BUTTON_TYPE} />
+          {hasError && <ErrorMessage text='Sorry, login failed!' />}
           <p className='mt-6'>
             If you don't have an account you may{' '}
             <Link className='font-bold' to={'/registration'}>

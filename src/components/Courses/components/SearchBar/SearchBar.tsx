@@ -1,5 +1,5 @@
 import Button from '../../../../common/Button/Button';
-import Input from '../../../../common/Input.tsx/Input';
+import Input from '../../../../common/Input/Input';
 import { ChangeEvent, useState } from 'react';
 
 const BUTTON_TEXT = 'SEARCH';
