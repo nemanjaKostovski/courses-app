@@ -6,6 +6,8 @@ type Input = {
   value: string;
   name: string;
   autoFocus?: boolean;
+  inputWidth?: string;
+  inline?: string;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 };
 
@@ -15,14 +17,17 @@ export default function Input({
   value,
   name,
   autoFocus,
-
+  inputWidth,
+  inline,
   onChange,
 }: Input) {
   return (
     <label htmlFor={name} className='mt-4 font-bold'>
       {name && `${name.charAt(0).toUpperCase()}${name.substring(1)}`}
       <input
-        className='w-80 h-10 p-1 block border-2 font-light'
+        className={`${
+          inputWidth || 'w - 80'
+        } ${inline} h-10 p-1 block border-2 font-light`}
         type={type}
         placeholder={placeholder}
         value={value}

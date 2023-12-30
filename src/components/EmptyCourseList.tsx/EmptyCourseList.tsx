@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import Button from '../../common/Button/Button';
 
 export default function EmptyCourseList() {
@@ -9,7 +10,9 @@ export default function EmptyCourseList() {
       <p className='mb-4'>
         Please use "Add New Course" button to add your first course
       </p>
-      <Button buttonText={BUTTON_TEXT} />
+      <Link to='/courses/add'>
+        <Button buttonText={BUTTON_TEXT} />
+      </Link>
     </div>
   );
 }

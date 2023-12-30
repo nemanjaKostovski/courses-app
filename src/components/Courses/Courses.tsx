@@ -11,10 +11,10 @@ interface Author {
 }
 
 export default function Courses() {
-  const token = localStorage.getItem('token');
+  const user_token = localStorage.getItem('user_token');
   const navigate = useNavigate();
 
-  if (!token) {
+  if (!user_token) {
     return <Navigate to='/login' />;
   }
 

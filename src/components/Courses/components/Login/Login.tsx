@@ -77,7 +77,7 @@ export default function Login() {
 
       if (response.status === 201) {
         setHasError(false);
-        localStorage.setItem('token', response.data.result);
+        localStorage.setItem('user_token', response.data.result);
         navigate('/courses');
       } else {
         console.error('Login failed:', response.data);
