@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Input from '../../../../common/Input/Input';
 import Header from '../../../Header/Header';
 import Button from '../../../../common/Button/Button';
@@ -12,6 +12,15 @@ type LoginFormData = {
 };
 
 export default function Login() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const user_token = localStorage.getItem('user_token');
+    if (user_token) {
+      navigate('/courses');
+    }
+  }, [navigate]);
+
   const BUTTON_TEXT = 'LOGIN';
   const BUTTON_TYPE = 'submit';
 
@@ -26,8 +35,6 @@ export default function Login() {
   });
 
   const [hasError, setHasError] = useState(false);
-
-  const navigate = useNavigate();
 
   const handleChange = (e: { target: { value: string; name: string } }) => {
     const { value, name } = e.target;
