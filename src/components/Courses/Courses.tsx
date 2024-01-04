@@ -2,71 +2,60 @@ import CourseCard from './components/CourseCard/CourseCard';
 import { mockedCoursesList, mockedAuthorsList } from '../../constants';
 import EmptyCourseList from '../EmptyCourseList.tsx/EmptyCourseList';
 import getCourseDuration from '../../helpers/getCourseDuration';
-import SearchBar from './components/SearchBar/SearchBar';
-import CourseInfo from '../CourseInfo/CourseInfo';
-import { useState } from 'react';
+import Header from '../Header/Header';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 interface Author {
   id: string;
   name: string;
 }
 
-interface Course {
-  id: string;
-  title: string;
-  description: string;
-  creationDate: string;
-  duration: number;
-  authors: string[];
-}
-
 export default function Courses() {
-  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+  const user_token = localStorage.getItem('user_token');
+  const navigate = useNavigate();
 
-  function goToCourseInfo(course: Course) {
-    setSelectedCourse(course);
+  if (!user_token) {
+    return <Navigate to='/login' />;
   }
 
   if (!mockedAuthorsList.length) {
     return <EmptyCourseList />;
   }
 
-  return (
-    <div className='flex flex-col ml-40'>
-      <SearchBar />
-      {mockedCoursesList.map((course) => {
-        const authors = course.authors.map((authorId) => {
-          const author: Author | undefined = mockedAuthorsList.find(
-            (a) => a.id === authorId
-          );
-          return author && author.name;
-        });
+  const handleShowCourse = (courseId: string) => {
+    const course = mockedCoursesList.find((c) => c.id === courseId);
 
-        return (
-          <div key={course.id}>
-            {selectedCourse && selectedCourse.id === course.id ? (
-              <CourseInfo
-                id={course.id}
-                author={authors.join(', ')}
-                title={course.title}
-                text={course.description}
-                duration={getCourseDuration(course.duration)}
-                date={course.creationDate.split('/').join('.')}
-                onClick={() => setSelectedCourse(null)}
-              />
-            ) : (
+    if (course) {
+      navigate(`/courses/${courseId}`, { state: course });
+    }
+  };
+
+  return (
+    <>
+      <Header />
+      <div className='flex flex-col pl-40 bg-gray-50'>
+        {mockedCoursesList.map((course) => {
+          const authors = course.authors.map((authorId) => {
+            const author: Author | undefined = mockedAuthorsList.find(
+              (a) => a.id === authorId
+            );
+            return author && author.name;
+          });
+
+          return (
+            <div key={course.id}>
               <CourseCard
                 author={authors.join(', ')}
                 title={course.title}
                 text={course.description}
                 duration={getCourseDuration(course.duration)}
                 date={course.creationDate.split('/').join('.')}
-                onClick={() => goToCourseInfo(course)}
+                onClick={() => handleShowCourse(course.id)}
               />
-            )}
-          </div>
-        );
-      })}
-    </div>
+            </div>
+          );
+        })}
+      </div>
+    </>
   );
 }
