@@ -84,7 +84,7 @@ export default function Login() {
       if (response.status === 201) {
         setHasError(false);
         localStorage.setItem('user_token', response.data.result);
-        dispatch(fetchUser());
+        await dispatch(fetchUser());
         navigate('/courses');
       } else {
         console.error('Login failed:', response.data);
