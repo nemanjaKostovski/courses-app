@@ -3,8 +3,8 @@ import Input from '../../../../common/Input/Input';
 import Header from '../../../Header/Header';
 import Button from '../../../../common/Button/Button';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import ErrorMessage from '../../../../common/Error/ErrorMessage';
+import { registerUser } from '../../../../services';
 
 type RegistrationFormData = {
   name: string;
@@ -84,10 +84,7 @@ export default function Registration() {
     };
 
     try {
-      const response = await axios.post(
-        'http://localhost:4000/register',
-        newUser
-      );
+      const response = await registerUser(newUser);
 
       if (response.status === 201) {
         setHasError(false);

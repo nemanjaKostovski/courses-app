@@ -7,6 +7,8 @@ type CourseCard = {
   duration: string;
   date: string;
   onClick: () => void;
+  onRemoveClick: () => void;
+  onEditClick?: () => void;
 };
 
 const BUTTON_TEXT = 'SHOW COURSE';
@@ -18,6 +20,8 @@ export default function CourseCard({
   duration,
   date,
   onClick,
+  onRemoveClick,
+  onEditClick,
 }: CourseCard) {
   return (
     <section className='flex flex-col p-2 border-2 border-l-8 border-l-black rounded w-5/6 mb-4 m-2 bg-white'>
@@ -38,8 +42,10 @@ export default function CourseCard({
             {date}
           </p>
           <br />
-          <div className='w-60'>
+          <div className='w-full'>
             <Button buttonText={BUTTON_TEXT} onClick={onClick} />
+            <Button buttonText='🗑️' onClick={onRemoveClick} />
+            <Button buttonText='✏️' onClick={onEditClick} />
           </div>
         </div>
       </article>

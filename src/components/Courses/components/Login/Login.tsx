@@ -3,8 +3,9 @@ import Input from '../../../../common/Input/Input';
 import Header from '../../../Header/Header';
 import Button from '../../../../common/Button/Button';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import ErrorMessage from '../../../../common/Error/ErrorMessage';
+import { useAppDispatch } from '../../../../hooks';
+import { fetchUser, loginUser } from '../../../../services';
 
 type LoginFormData = {
   email: string;
@@ -12,6 +13,7 @@ type LoginFormData = {
 };
 
 export default function Login() {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -77,14 +79,12 @@ export default function Login() {
     };
 
     try {
-      const response = await axios.post(
-        'http://localhost:4000/login',
-        newLogin
-      );
+      const response = await loginUser(newLogin);
 
       if (response.status === 201) {
         setHasError(false);
         localStorage.setItem('user_token', response.data.result);
+        dispatch(fetchUser());
         navigate('/courses');
       } else {
         console.error('Login failed:', response.data);
