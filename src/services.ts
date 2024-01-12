@@ -47,10 +47,11 @@ export const registerUser = async (userData: Registration) => {
 // User API functions
 
 export const fetchUser = createAsyncThunk('user/fetchUser', async () => {
+  const user_token = localStorage.getItem('user_token');
+  const headers = { Authorization: user_token };
+
   return await axios
-    .get('http://localhost:4000/users/me', {
-      headers: headers,
-    })
+    .get('http://localhost:4000/users/me', { headers })
     .then((response) => response.data.result);
 });
 
