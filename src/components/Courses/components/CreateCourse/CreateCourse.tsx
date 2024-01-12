@@ -7,9 +7,20 @@ import Button from '../../../../common/Button/Button';
 import getCourseDuration from '../../../../helpers/getCourseDuration';
 import AuthorItem from './components/AuthorItem/AuthorItem';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
-import { saveNewAuthor, fetchAuthors } from '../../../../services';
+import {
+  saveNewAuthor,
+  fetchAuthors,
+  saveNewCourse,
+} from '../../../../services';
 
 type CreateCourse = {
+  title: string;
+  description: string;
+  duration: number;
+  authors: string[];
+};
+
+type NewCourse = {
   title: string;
   description: string;
   duration: number;
@@ -22,7 +33,7 @@ export default function CreateCourse() {
   const CREATE_COURSE_BUTTON_TYPE = 'submit';
   // cancel button
   const CANCEL_BUTTON_TEXT = 'CANCEL';
-  const CANCEL_BUTTON_TYPE = 'reset';
+  const CANCEL_BUTTON_TYPE = 'button';
   // add author button
   const CREATE_AUTHOR_BUTTON_TEXT = 'CREATE AUTHOR';
   const CREATE_AUTHOR_BUTTON_TYPE = 'button';
@@ -123,7 +134,20 @@ export default function CreateCourse() {
       return;
     }
 
-    navigate('/courses');
+    const newCourse: NewCourse = {
+      title: createNewCourse.title,
+      description: createNewCourse.description,
+      duration: createNewCourse.duration,
+      authors: authorsForCourse.map((author) => author.id),
+    };
+
+    console.log(newCourse);
+    try {
+      await dispatch(saveNewCourse(newCourse));
+      navigate('/courses');
+    } catch (error) {
+      console.error('Error saving new course:', error);
+    }
   };
 
   return (
@@ -220,6 +244,9 @@ export default function CreateCourse() {
             buttonText={CANCEL_BUTTON_TEXT}
             maxWidth='w-40'
             type={CANCEL_BUTTON_TYPE}
+            onClick={() => {
+              navigate('/courses');
+            }}
           />
           <Button
             buttonText={CREATE_COURSE_BUTTON_TEXT}

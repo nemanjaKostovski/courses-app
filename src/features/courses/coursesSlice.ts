@@ -7,10 +7,17 @@ import {
 } from '../../services';
 
 type CourseType = {
-  id: string;
+  id?: string;
   title: string;
   description: string;
-  creationDate: string;
+  creationDate?: string;
+  duration: number;
+  authors: string[];
+};
+
+type NewCourse = {
+  title: string;
+  description: string;
   duration: number;
   authors: string[];
 };
@@ -50,7 +57,7 @@ const coursesSlice = createSlice({
     });
     builder.addCase(
       saveNewCourse.fulfilled,
-      (state, action: PayloadAction<CourseType>) => {
+      (state, action: PayloadAction<NewCourse>) => {
         state.courses.push(action.payload);
         state.loading = false;
         state.error = '';

@@ -9,7 +9,7 @@ export default function Header() {
   const user_token = localStorage.getItem('user_token');
   const BUTTON_TEXT = user_token ? 'LOGOUT' : 'LOGIN';
 
-  const user = useAppSelector((state) => state.user.user.name);
+  const userName = useAppSelector((state) => state.user.user.name);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -28,12 +28,12 @@ export default function Header() {
       }
     };
     user_token && getUser();
-  }, [user_token, dispatch]);
+  }, [dispatch, user_token]);
   return (
     <header className='flex items-center justify-between pl-10 pr-10 mt-2'>
       <Logo />
       <div className='flex flex-row'>
-        {<p className='p-2'>{user}</p>}
+        {<p className='p-2'>{userName === null ? 'Admin' : userName}</p>}
         <Button buttonText={BUTTON_TEXT} onClick={handleLogout} />
       </div>
     </header>

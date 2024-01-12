@@ -10,6 +10,13 @@ type CourseType = {
   authors: string[];
 };
 
+type NewCourse = {
+  title: string;
+  description: string;
+  duration: number;
+  authors: string[];
+};
+
 type Credentials = {
   email: string;
   password: string;
@@ -87,11 +94,9 @@ export const fetchCourses = createAsyncThunk(
 
 export const saveNewCourse = createAsyncThunk(
   'courses/saveNewCourse',
-  async (newCourse) => {
+  async (newCourse: NewCourse) => {
     return await axios
-      .post('http://localhost:4000/courses/add', newCourse, {
-        headers,
-      })
+      .post('http://localhost:4000/courses/add', { newCourse }, { headers })
       .then((response) => response.data.result);
   }
 );
