@@ -13,13 +13,6 @@ import {
   saveNewCourse,
 } from '../../../../services';
 
-type CreateCourse = {
-  title: string;
-  description: string;
-  duration: number;
-  authors: string[];
-};
-
 type NewCourse = {
   title: string;
   description: string;
@@ -137,7 +130,7 @@ export default function CreateCourse() {
     const newCourse: NewCourse = {
       title: createNewCourse.title,
       description: createNewCourse.description,
-      duration: createNewCourse.duration,
+      duration: Number(createNewCourse.duration),
       authors: authorsForCourse.map((author) => author.id),
     };
 

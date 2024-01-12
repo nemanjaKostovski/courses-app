@@ -96,7 +96,7 @@ export const saveNewCourse = createAsyncThunk(
   'courses/saveNewCourse',
   async (newCourse: NewCourse) => {
     return await axios
-      .post('http://localhost:4000/courses/add', { newCourse }, { headers })
+      .post('http://localhost:4000/courses/add', newCourse, { headers })
       .then((response) => response.data.result);
   }
 );
