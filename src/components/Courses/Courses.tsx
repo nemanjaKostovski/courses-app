@@ -13,14 +13,14 @@ interface Author {
   name: string;
 }
 
-type CourseType = {
-  id: string;
-  title: string;
-  description: string;
-  creationDate: string;
-  duration: number;
-  authors: string[];
-};
+// type CourseType = {
+//   id: string;
+//   title: string;
+//   description: string;
+//   creationDate: string;
+//   duration: number;
+//   authors: string[];
+// };
 
 export default function Courses() {
   const BUTTON_TEXT = 'ADD NEW COURSE';
@@ -57,7 +57,7 @@ export default function Courses() {
   }
 
   const handleShowCourse = (courseId: string) => {
-    const course = coursesList.find((c: { id: string }) => c.id === courseId);
+    const course = coursesList.find((c) => c.id === courseId);
 
     if (course) {
       navigate(`/courses/${courseId}`, { state: course });
@@ -65,7 +65,7 @@ export default function Courses() {
   };
 
   const handleRemoveCourse = (courseId: string) => {
-    const course = coursesList.find((c: { id: string }) => c.id === courseId);
+    const course = coursesList.find((c) => c.id === courseId);
 
     if (course) {
       dispatch(deleteCourse(courseId));
@@ -80,7 +80,7 @@ export default function Courses() {
     <>
       <Header />
       <div className='flex flex-col pl-40 bg-gray-50'>
-        {coursesList.map((course: CourseType) => {
+        {coursesList.map((course) => {
           const authors = course.authors.map((authorId) => {
             const author: Author | undefined = authorsList?.find(
               (a: { id: string }) => a.id === authorId
@@ -95,9 +95,9 @@ export default function Courses() {
                 title={course.title}
                 text={course.description}
                 duration={getCourseDuration(course.duration)}
-                date={course.creationDate.split('/').join('.')}
-                onClick={() => handleShowCourse(course.id)}
-                onRemoveClick={() => handleRemoveCourse(course.id)}
+                date={course.creationDate?.split('/').join('.') || ''}
+                onClick={() => handleShowCourse(course.id as string)}
+                onRemoveClick={() => handleRemoveCourse(course.id as string)}
               />
             </div>
           );
