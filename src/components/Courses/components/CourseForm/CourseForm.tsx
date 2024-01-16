@@ -20,7 +20,7 @@ type NewCourse = {
   authors: string[];
 };
 
-export default function CreateCourse() {
+export default function CourseForm() {
   // create course button
   const CREATE_COURSE_BUTTON_TEXT = 'CREATE COURSE';
   const CREATE_COURSE_BUTTON_TYPE = 'submit';

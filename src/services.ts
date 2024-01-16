@@ -28,12 +28,6 @@ type Registration = {
   password: string;
 };
 
-const user_token = localStorage.getItem('user_token');
-
-const headers = {
-  Authorization: user_token,
-};
-
 // Login and Registration API functions
 
 export const loginUser = async (credentials: Credentials) => {
@@ -50,17 +44,28 @@ export const fetchUser = createAsyncThunk('user/fetchUser', async () => {
   const user_token = localStorage.getItem('user_token');
   const headers = { Authorization: user_token };
 
-  return await axios
-    .get('http://localhost:4000/users/me', { headers })
-    .then((response) => response.data.result);
+  if (user_token) {
+    return await axios
+      .get('http://localhost:4000/users/me', { headers })
+      .then((response) => response.data.result);
+  }
 });
 
 export const removeUser = createAsyncThunk('user/removeUser', async () => {
-  return await axios
-    .get('http://localhost:4000/users/me', {
-      headers: headers,
-    })
-    .then((response) => response.data.result);
+  try {
+    const user_token = localStorage.getItem('user_token');
+    if (!user_token) {
+      throw new Error('User token not found');
+    }
+    const headers = { Authorization: user_token };
+    return await axios
+      .delete('http://localhost:4000/logout', {
+        headers: headers,
+      })
+      .then((response) => response.data.result);
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 // Author API functions
@@ -76,6 +81,8 @@ export const fetchAuthors = createAsyncThunk(
 export const saveNewAuthor = createAsyncThunk(
   'courses/saveNewAuthor',
   async (name: string) => {
+    const user_token = localStorage.getItem('user_token');
+    const headers = { Authorization: user_token };
     return await axios
       .post('http://localhost:4000/authors/add', { name }, { headers })
       .then((response) => response.data.result);
@@ -96,6 +103,8 @@ export const fetchCourses = createAsyncThunk(
 export const saveNewCourse = createAsyncThunk(
   'courses/saveNewCourse',
   async (newCourse: NewCourse) => {
+    const user_token = localStorage.getItem('user_token');
+    const headers = { Authorization: user_token };
     return await axios
       .post('http://localhost:4000/courses/add', newCourse, { headers })
       .then((response) => response.data.result);
@@ -105,6 +114,8 @@ export const saveNewCourse = createAsyncThunk(
 export const deleteCourse = createAsyncThunk(
   'courses/deleteCourse',
   async (courseId: string) => {
+    const user_token = localStorage.getItem('user_token');
+    const headers = { Authorization: user_token };
     return await axios
       .delete(`http://localhost:4000/courses/${courseId}`, {
         headers,
@@ -116,6 +127,8 @@ export const deleteCourse = createAsyncThunk(
 export const updateCourse = createAsyncThunk(
   'courses/updateCourse',
   async (updatedCourse: CourseType) => {
+    const user_token = localStorage.getItem('user_token');
+    const headers = { Authorization: user_token };
     return await axios
       .put(`http://localhost:4000/courses/${updatedCourse.id}`, updatedCourse, {
         headers,

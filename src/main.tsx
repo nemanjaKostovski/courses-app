@@ -7,7 +7,7 @@ import Login from './components/Courses/components/Login/Login.tsx';
 import Registration from './components/Courses/components/Registration/Registration.tsx';
 import Courses from './components/Courses/Courses.tsx';
 import CourseInfo from './components/CourseInfo/CourseInfo.tsx';
-import CreateCourse from './components/Courses/components/CreateCourse/CreateCourse.tsx';
+import CourseForm from './components/Courses/components/CourseForm/CourseForm.tsx';
 
 import { Provider } from 'react-redux';
 import store from './store';
@@ -22,7 +22,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           <Route path='/registration' element={<Registration />} />
           <Route path='/courses' element={<Courses />} />
           <Route path='/courses/:courseId' element={<CourseInfo />} />
-          <Route path='/courses/add' element={<CreateCourse />} />
+          <Route path='/courses/add' element={<CourseForm />} />
         </Routes>
       </React.StrictMode>
     </BrowserRouter>

@@ -31,6 +31,7 @@ export default function Courses() {
   const coursesList = useAppSelector((state) => state.courses.courses);
   const authorsList = useAppSelector((state) => state.authors.authors);
   const isLoading = useAppSelector((state) => state.courses.loading);
+  const userRole = useAppSelector((state) => state.user.user.role);
 
   useEffect(() => {
     async function fetchDataFromStore() {
@@ -102,9 +103,11 @@ export default function Courses() {
             </div>
           );
         })}
-        <Link to='/courses/add'>
-          <Button buttonText={BUTTON_TEXT} />
-        </Link>
+        {userRole == 'admin' && (
+          <Link to='/courses/add'>
+            <Button buttonText={BUTTON_TEXT} />
+          </Link>
+        )}
       </div>
     </>
   );
