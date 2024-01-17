@@ -1,9 +1,9 @@
 import { Link, useParams } from 'react-router-dom';
 import Button from '../../common/Button/Button';
 import { ReactNode, useEffect, useState } from 'react';
-import { mockedCoursesList, mockedAuthorsList } from '../../constants';
 import getCourseDuration from '../../helpers/getCourseDuration';
 import Header from '../Header/Header';
+import { useAppSelector } from '../../hooks';
 
 interface Author {
   id: string;
@@ -24,14 +24,16 @@ const BUTTON_TEXT = 'BACK';
 export default function CourseInfo() {
   const { courseId } = useParams();
   const [course, setCourse] = useState<Course | null>(null);
+  const coursesList = useAppSelector((state) => state.courses.courses);
+  const authorsList = useAppSelector((state) => state.authors.authors);
 
   useEffect(() => {
-    const selectedCourse = mockedCoursesList.find((c) => c.id === courseId);
+    const selectedCourse = coursesList.find((c) => c.id === courseId);
 
     if (selectedCourse) {
       setCourse(selectedCourse);
     }
-  }, [courseId]);
+  }, [courseId, coursesList]);
 
   return (
     course && (
@@ -61,7 +63,7 @@ export default function CourseInfo() {
                   <span className='font-bold mr-5'>Authors: </span>
                   {course.authors
                     .map((authorId) => {
-                      const author: Author | undefined = mockedAuthorsList.find(
+                      const author: Author | undefined = authorsList.find(
                         (a) => a.id === authorId
                       );
                       return author && author.name;

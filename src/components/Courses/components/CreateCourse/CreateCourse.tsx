@@ -1,17 +1,19 @@
 import Header from '../../../Header/Header';
 import Input from '../../../../common/Input/Input';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-// import axios from 'axios';
 import ErrorMessage from '../../../../common/Error/ErrorMessage';
 import Button from '../../../../common/Button/Button';
 import getCourseDuration from '../../../../helpers/getCourseDuration';
 import AuthorItem from './components/AuthorItem/AuthorItem';
-import { mockedAuthorsList, mockedCoursesList } from '../../../../constants';
-import { v4 as uuidv4 } from 'uuid';
-import formatCreationDate from '../../../../helpers/formatCreationDate';
+import { useAppDispatch, useAppSelector } from '../../../../hooks';
+import {
+  saveNewAuthor,
+  fetchAuthors,
+  saveNewCourse,
+} from '../../../../services';
 
-type CreateCourse = {
+type NewCourse = {
   title: string;
   description: string;
   duration: number;
@@ -24,10 +26,17 @@ export default function CreateCourse() {
   const CREATE_COURSE_BUTTON_TYPE = 'submit';
   // cancel button
   const CANCEL_BUTTON_TEXT = 'CANCEL';
-  const CANCEL_BUTTON_TYPE = 'reset';
+  const CANCEL_BUTTON_TYPE = 'button';
   // add author button
   const CREATE_AUTHOR_BUTTON_TEXT = 'CREATE AUTHOR';
   const CREATE_AUTHOR_BUTTON_TYPE = 'button';
+
+  const dispatch = useAppDispatch();
+  const authorsList = useAppSelector((state) => state.authors.authors);
+
+  useEffect(() => {
+    dispatch(fetchAuthors());
+  }, [dispatch]);
 
   const [createNewCourse, setCreateNewCourse] = useState({
     title: '',
@@ -41,11 +50,7 @@ export default function CreateCourse() {
     duration: '',
   });
 
-  // const [hasError, setHasError] = useState(false);
-
   const [author, setAuthor] = useState<string>('');
-
-  const [authorsList, setAuthorsList] = useState([...mockedAuthorsList]);
 
   const [authorsForCourse, setAuthorsForCourse] = useState<
     { id: string; name: string }[]
@@ -55,15 +60,9 @@ export default function CreateCourse() {
     setAuthor(e.target.value);
   };
 
-  const handleAddAuthor = () => {
+  const handleAddAuthor = async () => {
     if (author.length >= 2) {
-      const newAuthor = {
-        id: uuidv4(),
-        name: author,
-      };
-
-      setAuthorsList((prevAuthorsList) => [...prevAuthorsList, newAuthor]);
-      mockedAuthorsList.push(newAuthor);
+      await dispatch(saveNewAuthor(author));
       setAuthor('');
     }
   };
@@ -128,35 +127,20 @@ export default function CreateCourse() {
       return;
     }
 
-    const newCourse = {
-      id: uuidv4(),
+    const newCourse: NewCourse = {
       title: createNewCourse.title,
       description: createNewCourse.description,
-      creationDate: formatCreationDate(),
-      duration: createNewCourse.duration,
+      duration: Number(createNewCourse.duration),
       authors: authorsForCourse.map((author) => author.id),
     };
 
-    mockedCoursesList.push(newCourse);
-
-    navigate('/courses');
-
-    // try {
-    //   const response = await axios.post(
-    //     'http://localhost:4000/courses/add',
-    //     newCourse
-    //   );
-
-    //   if (response.status === 201) {
-    //     setHasError(false);
-    //     navigate('/courses');
-    //   } else {
-    //     console.error('Course creation failed:', response.data);
-    //   }
-    // } catch (error) {
-    //   console.error('Error during course creation:', error);
-    //   setHasError(true);
-    // }
+    console.log(newCourse);
+    try {
+      await dispatch(saveNewCourse(newCourse));
+      navigate('/courses');
+    } catch (error) {
+      console.error('Error saving new course:', error);
+    }
   };
 
   return (
@@ -253,6 +237,9 @@ export default function CreateCourse() {
             buttonText={CANCEL_BUTTON_TEXT}
             maxWidth='w-40'
             type={CANCEL_BUTTON_TYPE}
+            onClick={() => {
+              navigate('/courses');
+            }}
           />
           <Button
             buttonText={CREATE_COURSE_BUTTON_TEXT}
@@ -260,9 +247,6 @@ export default function CreateCourse() {
             type={CREATE_COURSE_BUTTON_TYPE}
           />
         </div>
-        {/* {hasError && (
-          <ErrorMessage text='Sorry, course creation failed!' noMargin />
-        )} */}
       </form>
     </>
   );
