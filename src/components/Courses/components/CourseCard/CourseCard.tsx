@@ -9,7 +9,7 @@ type CourseCard = {
   date: string;
   onClick: () => void;
   onRemoveClick: () => void;
-  onEditClick?: () => void;
+  onEditClick: () => void;
 };
 
 const BUTTON_TEXT = 'SHOW COURSE';

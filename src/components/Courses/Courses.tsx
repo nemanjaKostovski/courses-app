@@ -73,9 +73,13 @@ export default function Courses() {
     }
   };
 
-  // const handleEditCourse = (courseId: string) => {
-  //   // const course = coursesList.find((c: { id: string }) => c.id === courseId);
-  // };
+  const handleEditCourse = (courseId: string) => {
+    const course = coursesList.find((c) => c.id === courseId);
+
+    if (course) {
+      navigate(`/courses/update/${courseId}`);
+    }
+  };
 
   return (
     <>
@@ -99,6 +103,7 @@ export default function Courses() {
                 date={course.creationDate?.split('/').join('.') || ''}
                 onClick={() => handleShowCourse(course.id as string)}
                 onRemoveClick={() => handleRemoveCourse(course.id as string)}
+                onEditClick={() => handleEditCourse(course.id as string)}
               />
             </div>
           );

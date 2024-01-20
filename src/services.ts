@@ -3,9 +3,9 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 
 type CourseType = {
   id: string;
+  creationDate: string;
   title: string;
   description: string;
-  creationDate: string;
   duration: number;
   authors: string[];
 };
@@ -133,6 +133,6 @@ export const updateCourse = createAsyncThunk(
       .put(`http://localhost:4000/courses/${updatedCourse.id}`, updatedCourse, {
         headers,
       })
-      .then(() => updatedCourse);
+      .then((response) => response.data.result);
   }
 );
