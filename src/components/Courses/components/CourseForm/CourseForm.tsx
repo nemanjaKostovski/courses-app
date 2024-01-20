@@ -1,7 +1,7 @@
 import Header from '../../../Header/Header';
 import Input from '../../../../common/Input/Input';
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import ErrorMessage from '../../../../common/Error/ErrorMessage';
 import Button from '../../../../common/Button/Button';
 import getCourseDuration from '../../../../helpers/getCourseDuration';
@@ -11,6 +11,7 @@ import {
   saveNewAuthor,
   fetchAuthors,
   saveNewCourse,
+  updateCourse,
 } from '../../../../services';
 
 type NewCourse = {
@@ -20,9 +21,26 @@ type NewCourse = {
   authors: string[];
 };
 
+type CourseType = {
+  id: string;
+  title: string;
+  description: string;
+  creationDate: string;
+  duration: number;
+  authors: string[];
+};
+
 export default function CourseForm() {
+  // Variables for updating the existing course
+  const { courseId } = useParams();
+  const isUpdateMode = Boolean(courseId);
+  const courseList = useAppSelector((state) => state.courses.courses);
+  const courseForUpdate = courseList.find((course) => course.id == courseId)!;
+
   // create course button
-  const CREATE_COURSE_BUTTON_TEXT = 'CREATE COURSE';
+  const CREATE_COURSE_BUTTON_TEXT = isUpdateMode
+    ? 'UPDATE COURSE'
+    : 'CREATE COURSE';
   const CREATE_COURSE_BUTTON_TYPE = 'submit';
   // cancel button
   const CANCEL_BUTTON_TEXT = 'CANCEL';
@@ -43,6 +61,16 @@ export default function CourseForm() {
     description: '',
     duration: 0,
   });
+
+  useEffect(() => {
+    setCreateNewCourse({
+      title: courseForUpdate.title,
+      description: courseForUpdate.description,
+      duration: courseForUpdate.duration,
+    });
+    // I don't see why should I have title, description and duration inside of the dependencies?
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isUpdateMode]);
 
   const [validationErrors, setValidationErrors] = useState({
     title: '',
@@ -134,12 +162,28 @@ export default function CourseForm() {
       authors: authorsForCourse.map((author) => author.id),
     };
 
-    console.log(newCourse);
-    try {
-      await dispatch(saveNewCourse(newCourse));
-      navigate('/courses');
-    } catch (error) {
-      console.error('Error saving new course:', error);
+    if (isUpdateMode && courseForUpdate != undefined) {
+      const updatedCourse: CourseType = {
+        id: courseForUpdate.id!,
+        creationDate: courseForUpdate.creationDate!,
+        title: createNewCourse.title,
+        description: createNewCourse.description,
+        duration: Number(createNewCourse.duration),
+        authors: authorsForCourse.map((author) => author.id),
+      };
+      try {
+        await dispatch(updateCourse(updatedCourse));
+        navigate('/courses');
+      } catch (error) {
+        console.error('Error updating course:', error);
+      }
+    } else {
+      try {
+        await dispatch(saveNewCourse(newCourse));
+        navigate('/courses');
+      } catch (error) {
+        console.error('Error saving new course:', error);
+      }
     }
   };
 

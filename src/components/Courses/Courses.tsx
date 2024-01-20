@@ -13,15 +13,6 @@ interface Author {
   name: string;
 }
 
-// type CourseType = {
-//   id: string;
-//   title: string;
-//   description: string;
-//   creationDate: string;
-//   duration: number;
-//   authors: string[];
-// };
-
 export default function Courses() {
   const BUTTON_TEXT = 'ADD NEW COURSE';
   const user_token = localStorage.getItem('user_token');
