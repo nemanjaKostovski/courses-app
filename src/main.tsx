@@ -11,6 +11,7 @@ import CourseForm from './components/Courses/components/CourseForm/CourseForm.ts
 
 import { Provider } from 'react-redux';
 import store from './store';
+import PrivateRoutes from './components/PrivateRoutes/PrivateRoutes.tsx';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
@@ -22,7 +23,10 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           <Route path='/registration' element={<Registration />} />
           <Route path='/courses' element={<Courses />} />
           <Route path='/courses/:courseId' element={<CourseInfo />} />
-          <Route path='/courses/add' element={<CourseForm />} />
+          <Route element={<PrivateRoutes />}>
+            <Route path='/courses/add' element={<CourseForm />} />
+            <Route path='/courses/update/:courseId' element={<CourseForm />} />
+          </Route>
         </Routes>
       </React.StrictMode>
     </BrowserRouter>
