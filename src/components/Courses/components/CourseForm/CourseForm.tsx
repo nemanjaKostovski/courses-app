@@ -52,10 +52,6 @@ export default function CourseForm() {
   const dispatch = useAppDispatch();
   const authorsList = useAppSelector((state) => state.authors.authors);
 
-  useEffect(() => {
-    dispatch(fetchAuthors());
-  }, [dispatch]);
-
   const [createNewCourse, setCreateNewCourse] = useState({
     title: '',
     description: '',
@@ -98,11 +94,14 @@ export default function CourseForm() {
   const handleAddCourseAuthor = (authorId: string) => {
     const selectedAuthor = authorsList.find((author) => author.id === authorId);
 
-    if (selectedAuthor && !authorsForCourse.some((a) => a.id === authorId)) {
-      setAuthorsForCourse((prevAuthorsForCourse) => [
-        ...prevAuthorsForCourse,
-        selectedAuthor,
-      ]);
+    if (selectedAuthor) {
+      setAuthorsForCourse((prevAuthorsForCourse) => {
+        const uniqueAuthors = new Set([
+          ...prevAuthorsForCourse,
+          selectedAuthor,
+        ]);
+        return Array.from(uniqueAuthors);
+      });
     }
   };
 
@@ -111,6 +110,12 @@ export default function CourseForm() {
       prevAuthorsForCourse.filter((author) => author.id !== authorId)
     );
   };
+
+  useEffect(() => {
+    dispatch(fetchAuthors());
+    courseForUpdate.authors.map((author) => handleAddCourseAuthor(author));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const navigate = useNavigate();
 
