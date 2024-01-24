@@ -6,20 +6,29 @@ type User = {
   name: string;
   email: string;
   token: string;
+  role: string;
 };
 
 type initialState = {
   loading: boolean;
   user: User;
   error: string;
+  role: string;
 };
 
 const user_token = localStorage.getItem('user_token');
 
 const initialState: initialState = {
   loading: false,
-  user: { isAuth: false, name: '', email: '', token: user_token || '' },
+  user: {
+    isAuth: false,
+    name: '',
+    email: '',
+    token: user_token || '',
+    role: '',
+  },
   error: '',
+  role: '',
 };
 
 const userSlice = createSlice({
@@ -45,6 +54,7 @@ const userSlice = createSlice({
         name: '',
         email: '',
         token: user_token || '',
+        role: '',
       };
       state.error = action.error.message || 'Something went wrong';
     });
@@ -54,6 +64,7 @@ const userSlice = createSlice({
         name: '',
         email: '',
         token: '',
+        role: '',
       };
     });
   },

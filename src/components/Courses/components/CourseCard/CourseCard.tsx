@@ -1,4 +1,5 @@
 import Button from '../../../../common/Button/Button';
+import { useAppSelector } from '../../../../hooks';
 
 type CourseCard = {
   title: string;
@@ -8,7 +9,7 @@ type CourseCard = {
   date: string;
   onClick: () => void;
   onRemoveClick: () => void;
-  onEditClick?: () => void;
+  onEditClick: () => void;
 };
 
 const BUTTON_TEXT = 'SHOW COURSE';
@@ -23,6 +24,7 @@ export default function CourseCard({
   onRemoveClick,
   onEditClick,
 }: CourseCard) {
+  const userRole = useAppSelector((state) => state.user.user.role);
   return (
     <section className='flex flex-col p-2 border-2 border-l-8 border-l-black rounded w-5/6 mb-4 m-2 bg-white'>
       <h2 className='font-bold p-1'>{title}</h2>
@@ -44,8 +46,12 @@ export default function CourseCard({
           <br />
           <div className='w-full'>
             <Button buttonText={BUTTON_TEXT} onClick={onClick} />
-            <Button buttonText='🗑️' onClick={onRemoveClick} />
-            <Button buttonText='✏️' onClick={onEditClick} />
+            {userRole == 'admin' && (
+              <>
+                <Button buttonText='🗑️' onClick={onRemoveClick} />
+                <Button buttonText='✏️' onClick={onEditClick} />
+              </>
+            )}
           </div>
         </div>
       </article>

@@ -1,7 +1,7 @@
 import Header from '../../../Header/Header';
 import Input from '../../../../common/Input/Input';
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import ErrorMessage from '../../../../common/Error/ErrorMessage';
 import Button from '../../../../common/Button/Button';
 import getCourseDuration from '../../../../helpers/getCourseDuration';
@@ -11,6 +11,7 @@ import {
   saveNewAuthor,
   fetchAuthors,
   saveNewCourse,
+  updateCourse,
 } from '../../../../services';
 
 type NewCourse = {
@@ -20,9 +21,26 @@ type NewCourse = {
   authors: string[];
 };
 
-export default function CreateCourse() {
+type CourseType = {
+  id: string;
+  title: string;
+  description: string;
+  creationDate: string;
+  duration: number;
+  authors: string[];
+};
+
+export default function CourseForm() {
+  // Variables for updating the existing course
+  const { courseId } = useParams();
+  const isUpdateMode = Boolean(courseId);
+  const courseList = useAppSelector((state) => state.courses.courses);
+  const courseForUpdate = courseList.find((course) => course.id == courseId)!;
+
   // create course button
-  const CREATE_COURSE_BUTTON_TEXT = 'CREATE COURSE';
+  const CREATE_COURSE_BUTTON_TEXT = isUpdateMode
+    ? 'UPDATE COURSE'
+    : 'CREATE COURSE';
   const CREATE_COURSE_BUTTON_TYPE = 'submit';
   // cancel button
   const CANCEL_BUTTON_TEXT = 'CANCEL';
@@ -34,15 +52,21 @@ export default function CreateCourse() {
   const dispatch = useAppDispatch();
   const authorsList = useAppSelector((state) => state.authors.authors);
 
-  useEffect(() => {
-    dispatch(fetchAuthors());
-  }, [dispatch]);
-
   const [createNewCourse, setCreateNewCourse] = useState({
     title: '',
     description: '',
     duration: 0,
   });
+
+  useEffect(() => {
+    setCreateNewCourse({
+      title: courseForUpdate.title,
+      description: courseForUpdate.description,
+      duration: courseForUpdate.duration,
+    });
+    // I don't see why should I have title, description and duration inside of the dependencies?
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isUpdateMode]);
 
   const [validationErrors, setValidationErrors] = useState({
     title: '',
@@ -70,11 +94,14 @@ export default function CreateCourse() {
   const handleAddCourseAuthor = (authorId: string) => {
     const selectedAuthor = authorsList.find((author) => author.id === authorId);
 
-    if (selectedAuthor && !authorsForCourse.some((a) => a.id === authorId)) {
-      setAuthorsForCourse((prevAuthorsForCourse) => [
-        ...prevAuthorsForCourse,
-        selectedAuthor,
-      ]);
+    if (selectedAuthor) {
+      setAuthorsForCourse((prevAuthorsForCourse) => {
+        const uniqueAuthors = new Set([
+          ...prevAuthorsForCourse,
+          selectedAuthor,
+        ]);
+        return Array.from(uniqueAuthors);
+      });
     }
   };
 
@@ -83,6 +110,12 @@ export default function CreateCourse() {
       prevAuthorsForCourse.filter((author) => author.id !== authorId)
     );
   };
+
+  useEffect(() => {
+    dispatch(fetchAuthors());
+    courseForUpdate.authors.map((author) => handleAddCourseAuthor(author));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const navigate = useNavigate();
 
@@ -134,12 +167,28 @@ export default function CreateCourse() {
       authors: authorsForCourse.map((author) => author.id),
     };
 
-    console.log(newCourse);
-    try {
-      await dispatch(saveNewCourse(newCourse));
-      navigate('/courses');
-    } catch (error) {
-      console.error('Error saving new course:', error);
+    if (isUpdateMode && courseForUpdate != undefined) {
+      const updatedCourse: CourseType = {
+        id: courseForUpdate.id!,
+        creationDate: courseForUpdate.creationDate!,
+        title: createNewCourse.title,
+        description: createNewCourse.description,
+        duration: Number(createNewCourse.duration),
+        authors: authorsForCourse.map((author) => author.id),
+      };
+      try {
+        await dispatch(updateCourse(updatedCourse));
+        navigate('/courses');
+      } catch (error) {
+        console.error('Error updating course:', error);
+      }
+    } else {
+      try {
+        await dispatch(saveNewCourse(newCourse));
+        navigate('/courses');
+      } catch (error) {
+        console.error('Error saving new course:', error);
+      }
     }
   };
 
