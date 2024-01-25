@@ -33,7 +33,11 @@ export default function Header() {
     <header className='flex items-center justify-between pl-10 pr-10 mt-2'>
       <Logo />
       <div className='flex flex-row'>
-        {<p className='p-2'>{userName === null ? 'Admin' : userName}</p>}
+        {
+          <p data-testid='user-name' className='p-2'>
+            {userName === null ? 'Admin' : userName}
+          </p>
+        }
         <Button buttonText={BUTTON_TEXT} onClick={handleLogout} />
       </div>
     </header>
