@@ -5,7 +5,7 @@ import { MemoryRouter } from 'react-router-dom';
 import store from '../../store';
 
 describe('Header Component', () => {
-  test('should have logo', () => {
+  test('renders logo', () => {
     render(
       <MemoryRouter>
         <Provider store={store}>
@@ -14,10 +14,10 @@ describe('Header Component', () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByAltText('logo')).toBeInTheDocument();
+    expect(screen.getByRole('img', { name: /logo/i })).toBeInTheDocument();
   });
 
-  test("should have user's name", () => {
+  test("renders user's name", () => {
     render(
       <MemoryRouter>
         <Provider store={store}>
