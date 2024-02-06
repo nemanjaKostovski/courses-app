@@ -197,6 +197,7 @@ export default function CourseForm() {
       <Header />
 
       <form
+        data-testid='course-form'
         className='w-full h-screen flex flex-col pl-16 bg-gray-50'
         onSubmit={handleSubmit}
       >

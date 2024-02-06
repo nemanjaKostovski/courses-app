@@ -26,7 +26,10 @@ export default function CourseCard({
 }: CourseCard) {
   const userRole = useAppSelector((state) => state.user.user.role);
   return (
-    <section className='flex flex-col p-2 border-2 border-l-8 border-l-black rounded w-5/6 mb-4 m-2 bg-white'>
+    <section
+      data-testid='course-card'
+      className='flex flex-col p-2 border-2 border-l-8 border-l-black rounded w-5/6 mb-4 m-2 bg-white'
+    >
       <h2
         id='course-title'
         data-testid='course-title'
