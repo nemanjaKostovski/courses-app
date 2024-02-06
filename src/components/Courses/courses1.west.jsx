@@ -65,3 +65,10 @@
 
 //   expect(courseCards.length).toBe(handlers[0].response.body.length);
 // });
+
+//    jest.mock('react-redux', () => ({
+//      ...jest.requireActual('react-redux'),
+//      useSelector: () => ({
+//        // mocked selectors' data
+//      }),
+//    }));

@@ -19,6 +19,7 @@ export default function Courses() {
   const navigate = useNavigate();
 
   const dispatch = useAppDispatch();
+  console.log(useAppSelector((state) => state));
   const coursesList = useAppSelector((state) => state.courses.courses);
   const authorsList = useAppSelector((state) => state.authors.authors);
   const isLoading = useAppSelector((state) => state.courses.loading);
@@ -39,7 +40,7 @@ export default function Courses() {
   if (!user_token) {
     return <Navigate to='/login' />;
   }
-
+  console.log(isLoading);
   if (isLoading) {
     return <p>Loading...</p>;
   }
