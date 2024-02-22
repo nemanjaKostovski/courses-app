@@ -59,14 +59,16 @@ export default function CourseForm() {
   });
 
   useEffect(() => {
-    setCreateNewCourse({
-      title: courseForUpdate.title,
-      description: courseForUpdate.description,
-      duration: courseForUpdate.duration,
-    });
-    // I don't see why should I have title, description and duration inside of the dependencies?
+    if (isUpdateMode && courseForUpdate) {
+      setCreateNewCourse({
+        title: courseForUpdate.title || '',
+        description: courseForUpdate.description || '',
+        duration: courseForUpdate.duration || 0,
+      });
+      courseForUpdate.authors.map((author) => handleAddCourseAuthor(author));
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isUpdateMode]);
+  }, [isUpdateMode, courseForUpdate]);
 
   const [validationErrors, setValidationErrors] = useState({
     title: '',
@@ -113,8 +115,6 @@ export default function CourseForm() {
 
   useEffect(() => {
     dispatch(fetchAuthors());
-    courseForUpdate.authors.map((author) => handleAddCourseAuthor(author));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const navigate = useNavigate();
@@ -197,6 +197,7 @@ export default function CourseForm() {
       <Header />
 
       <form
+        data-testid='course-form'
         className='w-full h-screen flex flex-col pl-16 bg-gray-50'
         onSubmit={handleSubmit}
       >

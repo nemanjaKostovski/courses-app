@@ -26,11 +26,20 @@ export default function CourseCard({
 }: CourseCard) {
   const userRole = useAppSelector((state) => state.user.user.role);
   return (
-    <section className='flex flex-col p-2 border-2 border-l-8 border-l-black rounded w-5/6 mb-4 m-2 bg-white'>
-      <h2 className='font-bold p-1'>{title}</h2>
+    <section
+      data-testid='course-card'
+      className='flex flex-col p-2 border-2 border-l-8 border-l-black rounded w-5/6 mb-4 m-2 bg-white'
+    >
+      <h2
+        id='course-title'
+        data-testid='course-title'
+        className='font-bold p-1'
+      >
+        {title}
+      </h2>
       <article className='flex p-1 ml-1'>
         <p className='w-[60%]'>{text}</p>
-        <div className='flex flex-col w-[40%}'>
+        <div className='flex flex-col w-[40%]'>
           <p className='truncate'>
             <span className='font-bold'>Authors: </span>
             {author}
